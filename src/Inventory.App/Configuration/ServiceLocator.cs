@@ -14,13 +14,17 @@
 
 using System;
 using System.Collections.Concurrent;
-
+using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
-
+using Castle.Core.Logging;
+using Inventory.Data;
+using Inventory.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 using Inventory.Services;
 using Inventory.ViewModels;
+using RuhRoh;
+using RuhRoh.Extensions.Microsoft.DependencyInjection;
 
 namespace Inventory
 {
@@ -76,7 +80,45 @@ namespace Inventory
             serviceCollection.AddTransient<ValidateConnectionViewModel>();
             serviceCollection.AddTransient<CreateDatabaseViewModel>();
 
+            AddSomeChaos(serviceCollection);
+
             _rootServiceProvider = serviceCollection.BuildServiceProvider();
+        }
+
+        private static void AddSomeChaos(IServiceCollection serviceCollection)
+        {
+            //serviceCollection.AffectSingleton<ILoginService, LoginService>()
+            //    .WhenCalling(x => x.SignInWithWindowsHelloAsync())
+            //    .Throw<Exception>()
+            //    .AfterNCalls(2);
+
+            //serviceCollection.AffectSingleton<ICustomerService, CustomerService>()
+            //    .WhenCalling(x => x.GetCustomersAsync(With.Any<DataRequest<Customer>>()))
+            //    .SlowItDownBy(TimeSpan.FromSeconds(20))
+            //    .EveryNCalls(2);
+
+            //serviceCollection.AffectSingleton<ILogService, LogService>()
+            //    .WhenCalling(x => x.WriteAsync(With.Any<LogType>(), With.Any<string>(), With.Any<string>(), With.Any<string>(), With.Any<string>()))
+            //    .Throw(new System.IO.IOException("No more disk space!"))
+            //    .AfterNCalls(3);
+
+            Func<Task<CustomerModel>, Task<CustomerModel>> transformer = async task =>
+            {
+                var customer = await task;
+                if (customer == null)
+                {
+                    return null;
+                }
+
+                customer.FirstName = "Chuck";
+                customer.PictureSource = null;
+                return customer;
+            };
+
+            serviceCollection.AffectSingleton<ICustomerService, CustomerService>()
+                .WhenCalling(x => x.GetCustomerAsync(With.Any<long>()))
+                .ReturnsAsync<CustomerModel>(t => transformer(t))
+                .EveryNCalls(2);
         }
 
         static public ServiceLocator Current
