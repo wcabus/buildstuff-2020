@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inventory.Data", "Inventory.Data\Inventory.Data.csproj", "{515A0883-D2D9-4B97-8D73-EE6FE9BC3F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.ViewModels", "Inventory.ViewModels\Inventory.ViewModels.csproj", "{9CEE6144-0377-4F95-AC2D-FDC599B82ED9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inventory.ViewModels", "Inventory.ViewModels\Inventory.ViewModels.csproj", "{9CEE6144-0377-4F95-AC2D-FDC599B82ED9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.App", "Inventory.App\Inventory.App.csproj", "{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}"
 EndProject
@@ -56,6 +56,7 @@ Global
 		{9CEE6144-0377-4F95-AC2D-FDC599B82ED9}.Release|x86.ActiveCfg = Release|Any CPU
 		{9CEE6144-0377-4F95-AC2D-FDC599B82ED9}.Release|x86.Build.0 = Release|Any CPU
 		{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}.Debug|Any CPU.Build.0 = Debug|x86
 		{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}.Debug|ARM.ActiveCfg = Debug|ARM
 		{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}.Debug|ARM.Build.0 = Debug|ARM
 		{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}.Debug|ARM.Deploy.0 = Debug|ARM
