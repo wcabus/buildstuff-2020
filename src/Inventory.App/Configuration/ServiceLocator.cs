@@ -87,21 +87,35 @@ namespace Inventory
 
         private static void AddSomeChaos(IServiceCollection serviceCollection)
         {
-            //serviceCollection.AffectSingleton<ILoginService, LoginService>()
-            //    .WhenCalling(x => x.SignInWithWindowsHelloAsync())
-            //    .Throw<Exception>()
-            //    .AfterNCalls(2);
+            // Simulate Windows Hello crashing on us while signing in 
+            serviceCollection.AffectSingleton<ILoginService, LoginService>()
+                .WhenCalling(x => x.SignInWithWindowsHelloAsync())
+                .Throw<Exception>()
+                .AfterNCalls(2);
 
+            // Simulate a slow system delivering customer data, like an old CRM system
+            serviceCollection.AffectSingleton<ICustomerService, CustomerService>()
+                .WhenCalling(x => x.GetCustomersAsync(With.Any<DataRequest<Customer>>()))
+                .SlowItDownBy(TimeSpan.FromSeconds(20))
+                .EveryNCalls(2);
+
+            // Simulate running out of disk space when attempting to log something in the application
+            serviceCollection.AffectSingleton<ILogService, LogService>()
+                .WhenCalling(x => x.WriteAsync(With.Any<LogType>(), With.Any<string>(), With.Any<string>(), With.Any<string>(), With.Any<string>()))
+                .Throw(new System.IO.IOException("No more disk space!"))
+                .AfterNCalls(3);
+
+            // First attempt to change data: just replace every customer (on every second call) with a custom one
             //serviceCollection.AffectSingleton<ICustomerService, CustomerService>()
-            //    .WhenCalling(x => x.GetCustomersAsync(With.Any<DataRequest<Customer>>()))
-            //    .SlowItDownBy(TimeSpan.FromSeconds(20))
+            //    .WhenCalling(x => x.GetCustomerAsync(With.Any<long>()))
+            //    .ReturnsAsync(new CustomerModel
+            //    {
+            //        FirstName = "Chuck",
+            //        LastName = "Norris"
+            //    })
             //    .EveryNCalls(2);
 
-            //serviceCollection.AffectSingleton<ILogService, LogService>()
-            //    .WhenCalling(x => x.WriteAsync(With.Any<LogType>(), With.Any<string>(), With.Any<string>(), With.Any<string>(), With.Any<string>()))
-            //    .Throw(new System.IO.IOException("No more disk space!"))
-            //    .AfterNCalls(3);
-
+            // Transformer method to intercept customer data coming back from the database and change it
             Func<Task<CustomerModel>, Task<CustomerModel>> transformer = async task =>
             {
                 var customer = await task;
