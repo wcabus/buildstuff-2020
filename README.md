@@ -7,6 +7,10 @@ products:
 - windows-uwp
 ---
 
+# Ruh Roh Sample
+
+You can find the different chaos experiments being configured in the [ServiceLocator](src/Inventory.App/Configuration/ServiceLocator.cs) class.
+
 # VanArsdel Inventory Sample
 
 [![Build status](https://ci.appveyor.com/api/projects/status/s1gccf5kya2u0m7f?svg=true)](https://ci.appveyor.com/project/rido-min/inventorysample)
